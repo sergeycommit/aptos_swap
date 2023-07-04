@@ -127,5 +127,6 @@ if __name__ == '__main__':
         if random_:
             amount = random.randint(from_, to_)
         swap_cake(key, amount, slippage, token_from, token_to)
+        time.sleep(random.randint(5, 20))   ### Рандом задержки времени между кошельками
 
     logger.info('DONE')

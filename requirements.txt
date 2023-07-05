@@ -1,4 +1,4 @@
 anyio==3.7.0
 aptos-sdk==0.4.1
 requests==2.31.0
-logger
+loguru

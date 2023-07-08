@@ -11,14 +11,8 @@ from aptos_sdk.transactions import TransactionArgument, TransactionPayload, Type
 from aptos_sdk.authenticator import Authenticator, Ed25519Authenticator
 from loguru import logger
 
-from tokens import token_address
+from settings import TOKEN_ADDRESSES, GAS_LIMIT, GAS_PRICE, NODE_URL, ROUTER, WAIT_FROM, WAIT_TO
 
-GAS_LIMIT = 1000
-GAS_PRICE = 100
-
-PANCAKESWAP_ADRESS = '0xc7efb4076dbe143cbcd98cfaaa929ecfc8f299203dfff63b95ccb6bfe19850fa'
-
-NODE_URL = "https://fullnode.mainnet.aptoslabs.com/v1"
 REST_CLIENT = RestClient(NODE_URL)
 
 def get_price(token_from, token_to):
@@ -53,10 +47,10 @@ def swap_cake(privat_key: str, amount: int, slippage: int, token_from: float, to
                     ]
 
                 payload = EntryFunction.natural(
-                        "0xc7efb4076dbe143cbcd98cfaaa929ecfc8f299203dfff63b95ccb6bfe19850fa::router::swap_exact_input",
+                        ROUTER,
                         "swap_exact_input",
-                        [TypeTag(StructTag.from_str(token_address[token_from])),
-                         TypeTag(StructTag.from_str(token_address[token_to]))],
+                        [TypeTag(StructTag.from_str(TOKEN_ADDRESSES[token_from])),
+                         TypeTag(StructTag.from_str(TOKEN_ADDRESSES[token_to]))],
                         transaction_arguments,
                     )
 
@@ -127,6 +121,6 @@ if __name__ == '__main__':
         if random_:
             amount = random.randint(from_, to_)
         swap_cake(key, amount, slippage, token_from, token_to)
-        time.sleep(random.randint(5, 20))   ### Рандом задержки времени между кошельками
+        time.sleep(random.randint(WAIT_FROM, WAIT_TO))   ### Рандом задержки времени между кошельками
 
     logger.info('DONE')

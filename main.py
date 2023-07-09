@@ -35,7 +35,10 @@ def swap_cake(privat_key: str, amount: int, slippage: int, token_from: float, to
                 account_balance = int(REST_CLIENT.account_balance(account_address=str(current_account.address())))
                 gas_price = 54100
 
-                amount_to = int(amount * get_price(token_from, token_to) * slippage)
+                if token_to == 'USDC':
+                    amount_to = int(amount/100 * get_price(token_from, token_to) * slippage)
+                else:
+                    amount_to = int(amount * get_price(token_from, token_to) * slippage)
 
                 if account_balance <= amount + gas_price:
                     logger.info(f'{privat_key} | Маленький баланс: {account_balance / 100000000}')
@@ -111,6 +114,7 @@ if __name__ == '__main__':
 
     with open('private_keys.txt', 'r', encoding='utf-8-sig') as file:
             private_keys = [row.strip() for row in file]
+    random.shuffle(private_keys)
 
     logger.info(f'Успешно загружено {len(private_keys)} wallet\'s')
 

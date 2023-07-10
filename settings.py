@@ -18,6 +18,6 @@ NODE_URL = "https://rpc.ankr.com/http/aptos/v1"
 PANCAKESWAP_ROUTER = "0xc7efb4076dbe143cbcd98cfaaa929ecfc8f299203dfff63b95ccb6bfe19850fa::router::swap_exact_input"
 ROUTER = PANCAKESWAP_ROUTER
 
-#   Задержка между кошельками
+#   Задержка между кошельками в секундах
 WAIT_FROM = 5
 WAIT_TO = 20

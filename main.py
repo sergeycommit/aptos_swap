@@ -73,7 +73,7 @@ def swap_cake(privat_key: str, amount: int, slippage: int, token_from: float, to
 
                 tx_hash = REST_CLIENT.submit_bcs_transaction(SignedTransaction(raw_transaction, authenticator))
 
-                logger.success(f'{privat_key} | https://tracemove.io/transaction/{tx_hash}')
+                logger.success(f'{privat_key} | https://explorer.aptoslabs.com/txn/{tx_hash}?network=mainnet')
 
             except Exception as error:
                 logger.error(f'{privat_key} | {error}')

@@ -29,3 +29,6 @@ pip install -r requirements.txt
 
 python main.py
 ```
+
+#  Настройки
+в файле settings.py

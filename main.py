@@ -32,15 +32,20 @@ def swap_cake(privat_key: str, amount: int, slippage: int, token_from: float, to
         while True:
             token_from, token_to = token_from.upper(), token_to.upper()
             try:
-                account_balance = int(REST_CLIENT.account_balance(account_address=str(current_account.address())))
-                gas_price = 54100
+                COIN_STORE = "0x1::coin::CoinStore"
+
+                account_balance = int(REST_CLIENT.account_resource(current_account.address(),
+                                    f"{COIN_STORE}<{TOKEN_ADDRESSES[token_from]}>")['data']['coin']['value'])
+
+                if token_from == 'WETH':
+                    amount = int(amount / 100)
 
                 if token_to == 'USDC':
                     amount_to = int(amount/100 * get_price(token_from, token_to) * slippage)
                 else:
                     amount_to = int(amount * get_price(token_from, token_to) * slippage)
 
-                if account_balance <= amount + gas_price:
+                if account_balance < amount:
                     logger.info(f'{privat_key} | Маленький баланс: {account_balance / 100000000}')
                     return
 
@@ -100,17 +105,17 @@ def swap_cake(privat_key: str, amount: int, slippage: int, token_from: float, to
 
 if __name__ == '__main__':
     token_from = input('Введите токен для обмена: APT, WETH, USDT, USDC, CAKE, BLT: ')
-    token_to = input('Введите токен для получения: APT, WETH, USDT, USDC, CAKE, BLT: ')
+    token_to = input('токен для получения: APT, WETH, USDT, USDC, CAKE, BLT: ')
 
-    random_ = int(input('Введите 1 если диапазон количества токенов, 0 если определенное количество: '))
+    random_ = int(input('Количество токенов 1. random 0. фиксированное: '))
 
     if random_:
         from_ = int(float(input('Введите от скольки монет отправить: ')) * 100000000)
-        to_ = int(float(input('Введите до скольки монет отправить: ')) * 100000000)
+        to_ = int(float(input('до скольки монет отправить: ')) * 100000000)
     else:
         amount = int(float(input('Введите сколько монет отправить: ')) * 100000000)
 
-    slippage = 1 - int(input('Введите slippage от 0 до 10: '))/100
+    slippage = 1 - int(input('Введите slippage от 0 до 30: '))/100
 
     with open('private_keys.txt', 'r', encoding='utf-8-sig') as file:
             private_keys = [row.strip() for row in file]

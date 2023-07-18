@@ -35,17 +35,20 @@ def swap_cake(privat_key: str, amount: int, slippage: int, token_from: float, to
                 COIN_STORE = "0x1::coin::CoinStore"
 
                 account_balance = int(REST_CLIENT.account_resource(current_account.address(),
-                                    f"{COIN_STORE}<{TOKEN_ADDRESSES[token_from]}>")['data']['coin']['value'])
+                                                                   f"{COIN_STORE}<{TOKEN_ADDRESSES[token_from]}>")[
+                                          'data']['coin']['value'])
 
                 if token_from == 'WETH':
                     amount = int(amount / 100)
 
                 if token_to == 'USDC':
-                    amount_to = int(amount/100 * get_price(token_from, token_to) * slippage)
+                    amount_to = int(amount / 100 * get_price(token_from, token_to) * slippage)
                 else:
                     amount_to = int(amount * get_price(token_from, token_to) * slippage)
 
                 if account_balance < amount:
+                    if token_from.upper() == 'USDC':
+                        amount = int(amount * 100)
                     logger.info(f'{privat_key} | Маленький баланс: {account_balance / 100000000}')
                     return
 
